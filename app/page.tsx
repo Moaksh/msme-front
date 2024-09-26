@@ -26,15 +26,58 @@ const steps: Step[] = [
     { question: "And your email ID?", key: 'email_id', type: 'email' },
     { question: "Is this your first business?", key: 'is_first_business', type: 'select', options: ["Yes", "No"] },
     { question: "Where is your business located?", key: 'business_location', type: 'text' },
-    { question: "What sector does your business belong to?", key: 'sector', type: 'select', options: ["Manufacturing", "Services", "Others"] },
-    { question: "What type of business do you plan to start?", key: 'business_type', type: 'select', options: ["Sole Proprietorship", "Partnership", "Private Limited Company", "Others"] },
+    { question: "What sector does your business belong to?", key: 'sector', type: 'select', options: ["Manufacturing", "Services", "Trading"] },
+    { question: "What type of business do you plan to start?", key: 'business_type', type: 'select', options: [
+    "Leather products",
+    "Moulding of items",
+    "Products associated with natural fragrances and tastes",
+    "Consulting, management, and placement services",
+    "Educational Training Institutes",
+    "Energy-saving pump manufacturers",
+    "Photocopying Agencies/Centres",
+    "Crèches and beauty salons",
+    "Garages and auto repair services",
+    "X-ray machine manufacturers",
+    "Rental and leasing of equipment",
+    "Photographic lab",
+    "Maintenance of farm machinery for agriculture",
+    "Back-office operations",
+    "Local and International calling booths",
+    "Low-capital retail trade enterprise",
+    "Dish cable TV with multiple channels using a dish antenna",
+    "Dry cleaning and laundry",
+    "Hardened metal ware",
+    "Electronic components for automobiles",
+    "Electronic monitoring and security",
+    "Engineering Mechanics",
+    "Engineering and manufacturing",
+    "VCRs, recorders, radios, transformers, motors, and watches",
+    "Plants' micronutrients",
+    "Ayurvedic items and active pharmaceutical components",
+    "Products made from Khadi and Hosiery",
+    "Businesses involved in crafting activities",
+    "Paper printing and other paper-based products",
+    "Coir Products",
+    "Furniture goods",
+    "Farming of poultry",
+    "Bicycle components",
+    "Items of stationery",
+    "Contact Centre",
+    "Products made of rubber",
+    "IT services",
+    "Industry testing laboratories",
+    "Automobile companies",
+    "Ceramics and glass products",
+    "Retail Operations"
+]
+},
     { question: "Could you tell me a little about your business idea? (Brief description, max 100 words)", key: 'business_idea_brief', type: 'text' },
     { question: "Have you conducted any market research?", key: 'market_research', type: 'select', options: ["Yes", "No"], followUp: "research_summary" },
-    { question: "If yes, please provide a brief summary of your research (up to 100 words).", key: 'research_summary', type: 'text' },
+    { question: "Please provide a brief summary of your research (up to 100 words).", key: 'research_summary', type: 'text' },
     { question: "Do you have relevant skills or experience for this business?", key: 'skills_experience', type: 'select', options: ["Yes", "No"], followUp: 'skills_description' },
-    { question: "If yes, please describe your skills or experience (up to 100 words).", key: 'skills_description', type: 'text'},
-    { question: "When do you plan to start your business?", key: 'timeline', type: 'select', options: ["In 3 to 6 months", "In 6 to 12 months", "Other"] },
-    { question: "How much do you plan to invest?", key: 'investment_amount', type: 'select', options: ["Under ₹3 Lakh", "₹3-5 Lakh", "More than ₹5 Lakh"] },
+    { question: "Please describe your skills or experience (up to 100 words).", key: 'skills_description', type: 'text'},
+    { question: "When do you plan to start your business?", key: 'timeline', type: 'select', options: ["In 3 to 6 months", "In 6 to 12 months", "After 1 year","Not yet decided"] },
+    { question: "How much do you plan to invest?", key: 'investment_amount', type: 'select', options: ["Under Rs. 3 Lakh", "Rs. 3-5 Lakh", "Rs. 5-10 Lakh","Rs 10-25 Lakh"] },
     { question: "Do you have any specific milestones or goals for the first year? (Up to 100 words)", key: 'goals_description', type: 'text' },
     { question: "Do you have any concerns or questions about starting your business? (Up to 100 words)", key: 'concerns_description', type: 'text' },
 ];
@@ -59,7 +102,7 @@ const Home: React.FC = () => {
     const { toast } = useToast()
     const displayQuestion = steps[currentStep];
 
-    const chatContainerRef = useRef(null); // Create a ref for the chat container
+    const chatContainerRef = useRef<HTMLDivElement>(null); // Create a ref for the chat container
 
     const handleInputChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
         const { value } = e.target;
@@ -325,7 +368,7 @@ const Home: React.FC = () => {
                 {/* Input box */}
                 {loading && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                        <div className="text-white text-xl">Loading...</div>
+                        <div className="text-white text-xl">Generating Report...</div>
                     </div>
                 )}
             </div>
