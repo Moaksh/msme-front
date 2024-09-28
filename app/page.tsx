@@ -104,6 +104,11 @@ const Home: React.FC = () => {
     const displayQuestion = steps[currentStep];
 
     const chatContainerRef = useRef<HTMLDivElement>(null); // Create a ref for the chat container
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement | HTMLSelectElement>) => {
+    if (e.key === 'Enter') {
+        handleSubmit(); // Call the submit function when Enter is pressed
+    }
+};
 
     const handleInputChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
         const { value } = e.target;
@@ -395,6 +400,7 @@ const Home: React.FC = () => {
                                 className="option-select rounded-md border p-2 w-full"
                                 onChange={handleInputChange}
                                 value={inputValue}
+                                onKeyDown={handleKeyDown}
                                 disabled={currentStep >= steps.length}
                             >
                                 <option value="" disabled>Select an option</option>
@@ -409,6 +415,7 @@ const Home: React.FC = () => {
                                 className="border rounded-md p-2 w-full"
                                 placeholder="Type your answer..."
                                 value={inputValue}
+                                onKeyDown={handleKeyDown}
                                 onChange={handleInputChange}
                                 disabled={currentStep >= steps.length}
                             />
@@ -416,6 +423,7 @@ const Home: React.FC = () => {
                         )}
                         <button
                             onClick={() => handleSubmit()}
+
                             disabled={currentStep >= steps.length}
                             className="inline-flex items-center justify-center rounded-md text-sm font-medium text-[#f9fafb] disabled:pointer-events-none disabled:opacity-50 bg-black hover:bg-[#111827E6] h-10 px-4 py-2"
                         >
