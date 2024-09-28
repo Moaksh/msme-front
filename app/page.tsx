@@ -99,6 +99,7 @@ const Home: React.FC = () => {
     const [inputValue, setInputValue] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null); // State for error messages
+    const [serverError, setServerError] = useState<boolean>(false); // State for server error messages
     const { toast } = useToast()
     const displayQuestion = steps[currentStep];
 
@@ -122,25 +123,26 @@ const Home: React.FC = () => {
         return true; // For other types, we assume validity
     };
 
-    const handleSubmit = async () => {
-        if (inputValue.trim() === '') return;
+    const handleSubmit = async (isRetry = false) => {
+        if (inputValue.trim() === '' && !isRetry) return;
 
         // Validate input
-        if (!validateInput(inputValue)) {
+        if (!isRetry && !validateInput(inputValue)) {
             setError(`Please enter a valid ${displayQuestion.type === 'email' ? 'email' : 'phone number'}.`);
             toast({
-              variant: "destructive",
-              title: `Please enter a valid ${displayQuestion.type === 'email' ? 'email' : 'phone number'}.`,
-            })
+                variant: "destructive",
+                title: `Please enter a valid ${displayQuestion.type === 'email' ? 'email' : 'phone number'}.`,
+            });
             return;
         }
 
-
         // Add the current input to chat history
-        setChatHistory(prev => [...prev, { question: displayQuestion.question, answer: inputValue }]);
+        if (!isRetry) {
+            setChatHistory(prev => [...prev, { question: displayQuestion.question, answer: inputValue }]);
+        }
 
         // Update user data
-        const updatedUserData = { ...userData, [displayQuestion.key]: inputValue };
+        const updatedUserData = isRetry ? userData : { ...userData, [displayQuestion.key]: inputValue };
         setUserData(updatedUserData);
         setInputValue('');
 
@@ -162,6 +164,7 @@ const Home: React.FC = () => {
                 setLoading(true);
 
                 try {
+                    console.log('sending data', updatedUserData);
                     const res = await fetch('/api/submit', {
                         method: 'POST',
                         headers: {
@@ -177,15 +180,27 @@ const Home: React.FC = () => {
                     const data: ResponseData = await res.json();
                     console.log("API Response:", data);
                     setResponse(data);
+                    setServerError(false);
                 } catch (error) {
                     console.error("Error fetching data:", error);
                     setResponse({ response: "There was an error retrieving the data.", pdf_url: "" });
+                    toast({
+                        variant: "destructive",
+                        title: "There was an error retrieving the data. Please try again.",
+                    });
+                    setServerError(true);
                 } finally {
                     setLoading(false);
                 }
             }
         }
     };
+
+    const handleRetry = () => {
+       // Reset server error state
+        handleSubmit(true); // Retry sending the data
+    };
+
 
     const handelRestart = () => {
         setCurrentStep(0);
@@ -412,12 +427,24 @@ const Home: React.FC = () => {
             ) : (
                 <div className="flex items-center pt-2">
                     <div className="flex items-center justify-center w-full space-x-2">
-                        <button
-                            onClick={handelRestart}
-                            className="inline-flex items-center justify-center rounded-md text-sm font-medium text-[#f9fafb] bg-black hover:bg-[#111827E6] h-10 px-4 py-2"
-                        >
-                            Restart
-                        </button>
+
+
+                        {serverError ? (
+                            <button
+                                onClick={handleRetry}
+                                className="inline-flex items-center justify-center rounded-md text-sm font-medium text-[#f9fafb] bg-black hover:bg-[#111827E6] h-10 px-4 py-2"
+                            >
+                                Check again
+                            </button>
+                        ): (
+                            <button
+                                onClick={handelRestart}
+                                className="inline-flex items-center justify-center rounded-md text-sm font-medium text-[#f9fafb] bg-black hover:bg-[#111827E6] h-10 px-4 py-2"
+                            >
+                                Check another business
+                            </button>
+                        )}
+
                     </div>
                 </div>
             )}
