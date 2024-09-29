@@ -2,7 +2,6 @@
 import { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { MultiStepLoader as Loader } from "@/components/ui/multi-step-loader";
-import { IconSquareRoundedX } from "@tabler/icons-react";
 
 import { useToast } from "@/components/hooks/use-toast"
 import { Button } from "@/components/ui/button"
