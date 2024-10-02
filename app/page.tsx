@@ -452,6 +452,7 @@ const Home: React.FC = () => {
                                 className="border rounded-md p-2 w-full"
                                 placeholder="Enter your custom value (in INR.)"
                                 value={customInvestment}
+                                onKeyDown={handleKeyDown}
                                 onChange={(e) => setCustomInvestment(e.target.value)}
                             />
                         )}
