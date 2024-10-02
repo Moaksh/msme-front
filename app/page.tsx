@@ -6,6 +6,8 @@ import { MultiStepLoader as Loader } from "@/components/ui/multi-step-loader";
 import { useToast } from "@/components/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import { ToastAction } from "@/components/ui/toast"
+import pic from "@/app/assets/images/asha.jpeg"
+import Image from 'next/image'
 
 interface Step {
     question: string;
@@ -52,7 +54,7 @@ const steps: Step[] = [
     { question: "Please share your contact number.", key: 'contact_number', type: 'phone_number' },
     { question: "And your email ID?", key: 'email_id', type: 'email' },
     { question: "Is this your first business?", key: 'is_first_business', type: 'select', options: ["Yes", "No"] },
-    { question: "Where is your business located?", key: 'business_location', type: 'text' },
+    { question: "Where will your new business be located?", key: 'business_location', type: 'text' },
     { question: "What sector does your business belong to?", key: 'sector', type: 'select', options: ["Manufacturing", "Services", "Trading"] },
     { question: "What type of business do you plan to start?", key: 'business_type', type: 'select', options: [
     "Leather products",
@@ -104,7 +106,21 @@ const steps: Step[] = [
     { question: "Do you have relevant skills or experience for this business?", key: 'skills_experience', type: 'select', options: ["Yes", "No"], followUp: 'skills_description' },
     { question: "Please describe your skills or experience (up to 100 words).", key: 'skills_description', type: 'text'},
     { question: "When do you plan to start your business?", key: 'timeline', type: 'select', options: ["In 3 to 6 months", "In 6 to 12 months", "After 1 year","Not yet decided"] },
-    { question: "How much do you plan to invest?", key: 'investment_amount', type: 'select', options: ["Under Rs. 3 Lakh", "Rs. 3-5 Lakh", "Rs. 5-10 Lakh","Rs 10-25 Lakh"] },
+    { question: "How much do you plan to invest?", key: 'investment_amount', type: 'select', options: ["Under Rs. 3 Lakh",
+    "Rs. 3-5 Lakh",
+    "Rs. 5-10 Lakh",
+    "Rs. 10-25 Lakh",
+    "Rs. 25-50 Lakh",
+    "Rs. 50 Lakh - 1 Crore",
+    "Rs. 1 Crore - 2 Crore",
+    "Rs. 2 Crore - 5 Crore",
+    "Rs. 5 Crore - 10 Crore",
+    "Rs. 10 Crore - 25 Crore",
+    "Rs. 25 Crore - 50 Crore",
+    "Rs. 50 Crore - 100 Crore",
+    "Rs 100 Crore+",
+    "Enter Custom"
+ ] },
     { question: "Do you have any specific milestones or goals for the first year? (Up to 100 words)", key: 'goals_description', type: 'text' },
     { question: "Do you have any concerns or questions about starting your business? (Up to 100 words)", key: 'concerns_description', type: 'text' },
 ];
@@ -130,6 +146,8 @@ const Home: React.FC = () => {
     const { toast } = useToast()
     const displayQuestion = steps[currentStep];
 
+    const [customInvestment, setCustomInvestment] = useState<string>('');
+
     const chatContainerRef = useRef<HTMLDivElement>(null); // Create a ref for the chat container
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement | HTMLSelectElement>) => {
     if (e.key === 'Enter') {
@@ -152,6 +170,10 @@ const Home: React.FC = () => {
             const phoneRegex = /^[0-9]{10}$/; // Adjust regex as needed for your phone number format
             return phoneRegex.test(value);
         }
+        if (displayQuestion.key === 'investment_amount' && value === 'Other') {
+            setCustomInvestment(''); // Reset custom investment input when 'Other' is selected
+        }
+
         return true; // For other types, we assume validity
     };
 
@@ -177,6 +199,14 @@ const Home: React.FC = () => {
         const updatedUserData = isRetry ? userData : { ...userData, [displayQuestion.key]: inputValue };
         setUserData(updatedUserData);
         setInputValue('');
+
+        if (displayQuestion.key === 'investment_amount' && inputValue === 'Other') {
+            updatedUserData[displayQuestion.key] = customInvestment; // Use custom input
+        }
+
+        setUserData(updatedUserData);
+        setInputValue('');
+
 
         // Check for follow-up logic
         if (displayQuestion.followUp) {
@@ -281,7 +311,7 @@ const Home: React.FC = () => {
                                     </div>
                                 </span>
                                 <p className="leading-relaxed">
-                                    <span className="block font-bold text-gray-700">AI </span><ReactMarkdown>{response.response}</ReactMarkdown>
+                                    <span className="block font-bold text-gray-700">Asha </span><ReactMarkdown>{response.response}</ReactMarkdown>
                                     {response.pdf_url && (
                                         <a
                                             href={response.pdf_url}
@@ -303,27 +333,14 @@ const Home: React.FC = () => {
                          {/* Chat Message AI */}
                          <div className="flex gap-3 my-4 text-gray-600 text-sm flex-1">
                         <span className="relative flex shrink-0 overflow-hidden rounded-full w-8 h-8">
-                            <div className="rounded-full bg-gray-100 border p-1">
-                                <svg
-                                    stroke="none"
-                                    fill="black"
-                                    strokeWidth="1.5"
-                                    viewBox="0 0 24 24"
-                                    aria-hidden="true"
-                                    height="20"
-                                    width="20"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"
+                            <Image
+                                        src = {pic}
+                                        alt = "Asha"
+                                        className={"rounded-full bg-gray-100 border "}
                                     />
-                                </svg>
-                            </div>
                         </span>
                              <p className="leading-relaxed">
-                                 <span className="block font-bold text-gray-700">AI </span>Welcome! I'm Asha and here to
+                                 <span className="block font-bold text-gray-700">Asha </span>Welcome! I'm Asha and here to
                                  help
                                  you gather business
                                  advice and a feasibility report for your MSME business in Uttar Pradesh. Let’s get
@@ -336,27 +353,14 @@ const Home: React.FC = () => {
                              <div key={index} className="flex flex-col">
                                  <div className="flex gap-3 my-4 text-gray-600 text-sm flex-1">
                                 <span className="relative flex shrink-0 overflow-hidden rounded-full w-8 h-8">
-                                    <div className="rounded-full bg-gray-100 border p-1">
-                                        <svg
-                                            stroke="none"
-                                            fill="black"
-                                            strokeWidth="1.5"
-                                            viewBox="0 0 24 24"
-                                            aria-hidden="true"
-                                            height="20"
-                                            width="20"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"
-                                            />
-                                        </svg>
-                                    </div>
+                                    <Image
+                                        src = {pic}
+                                        alt = "Asha"
+                                        className={"rounded-full bg-gray-100 border "}
+                                    />
                                 </span>
                                      <p className="leading-relaxed">
-                                         <span className="block font-bold text-gray-700">AI </span>{item.question}
+                                         <span className="block font-bold text-gray-700">Asha </span>{item.question}
                                      </p>
                                  </div>
 
@@ -387,28 +391,34 @@ const Home: React.FC = () => {
                          {currentStep < steps.length && !loading && !response && (
                              <div className="flex gap-3 my-4 text-gray-600 text-sm flex-1" ref={chatContainerRef}>
                             <span className="relative flex shrink-0 overflow-hidden rounded-full w-8 h-8">
-                                <div className="rounded-full bg-gray-100 border p-1">
-                                    <svg
-                                        stroke="none"
-                                        fill="black"
-                                        strokeWidth="1.5"
-                                        viewBox="0 0 24 24"
-                                        aria-hidden="true"
-                                        height="20"
-                                        width="20"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"
-                                        />
-                                    </svg>
-                                </div>
+                                <Image
+                                        src = {pic}
+                                        alt = "Asha"
+                                        className={"rounded-full bg-gray-100 border "}
+                                    />
+                                {/*<div className="rounded-full bg-gray-100 border p-1">*/}
+                                {/*    <svg*/}
+                                {/*        stroke="none"*/}
+                                {/*        fill="black"*/}
+                                {/*        strokeWidth="1.5"*/}
+                                {/*        viewBox="0 0 24 24"*/}
+                                {/*        aria-hidden="true"*/}
+                                {/*        height="20"*/}
+                                {/*        width="20"*/}
+                                {/*        xmlns="http://www.w3.org/2000/svg"*/}
+                                {/*    >*/}
+                                {/*        <path*/}
+                                {/*            strokeLinecap="round"*/}
+                                {/*            strokeLinejoin="round"*/}
+                                {/*            d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"*/}
+                                {/*        />*/}
+                                {/*    </svg>*/}
+                                {/*    */}
+                                {/*</div>*/}
                             </span>
                                  <p className="leading-relaxed">
                                      <span
-                                         className="block font-bold text-gray-700">AI </span>{displayQuestion.question}
+                                         className="block font-bold text-gray-700">Asha </span>{displayQuestion.question}
                                  </p>
                              </div>
                          )}
@@ -437,7 +447,6 @@ const Home: React.FC = () => {
                                 ))}
                             </select>
                         ) : (
-
                             <input
                                 type={displayQuestion.type === 'email' ? 'email' : 'text'}
                                 className="border rounded-md p-2 w-full"
@@ -447,17 +456,28 @@ const Home: React.FC = () => {
                                 onChange={handleInputChange}
                                 disabled={currentStep >= steps.length}
                             />
-
                         )}
+
+                        {/* If the investment question is selected and 'Other' is chosen, show custom input */}
+                        {displayQuestion.key === 'investment_amount' && inputValue === 'Other' && (
+                            <input
+                                type="text"
+                                className="border rounded-md p-2 w-full"
+                                placeholder="Enter your custom value (in INR.)"
+                                value={customInvestment}
+                                onChange={(e) => setCustomInvestment(e.target.value)}
+                            />
+                        )}
+
                         <button
                             onClick={() => handleSubmit()}
-
                             disabled={currentStep >= steps.length}
                             className="inline-flex items-center justify-center rounded-md text-sm font-medium text-[#f9fafb] disabled:pointer-events-none disabled:opacity-50 bg-black hover:bg-[#111827E6] h-10 px-4 py-2"
                         >
                             Send
                         </button>
                     </div>
+
                     {/* Display error message */}
                 </div>
             ) : (
