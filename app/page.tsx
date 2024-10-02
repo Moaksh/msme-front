@@ -170,7 +170,7 @@ const Home: React.FC = () => {
             const phoneRegex = /^[0-9]{10}$/; // Adjust regex as needed for your phone number format
             return phoneRegex.test(value);
         }
-        if (displayQuestion.key === 'investment_amount' && value === 'Other') {
+        if (displayQuestion.key === 'investment_amount' && value === 'Enter Custom') {
             setCustomInvestment(''); // Reset custom investment input when 'Other' is selected
         }
 
@@ -200,7 +200,7 @@ const Home: React.FC = () => {
         setUserData(updatedUserData);
         setInputValue('');
 
-        if (displayQuestion.key === 'investment_amount' && inputValue === 'Other') {
+        if (displayQuestion.key === 'investment_amount' && inputValue === 'Enter Custom') {
             updatedUserData[displayQuestion.key] = customInvestment; // Use custom input
         }
 
@@ -459,7 +459,7 @@ const Home: React.FC = () => {
                         )}
 
                         {/* If the investment question is selected and 'Other' is chosen, show custom input */}
-                        {displayQuestion.key === 'investment_amount' && inputValue === 'Other' && (
+                        {displayQuestion.key === 'investment_amount' && inputValue === 'Enter Custom' && (
                             <input
                                 type="text"
                                 className="border rounded-md p-2 w-full"
