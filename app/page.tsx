@@ -293,12 +293,12 @@ const Home: React.FC = () => {
                                 <span className="relative flex shrink-0 overflow-hidden rounded-full w-8 h-8">
                                     <Image
                                         src = {pic}
-                                        alt = "Asha"
+                                        alt = "Udyam Mitra"
                                         className={"rounded-full bg-gray-100 border "}
                                     />
                                 </span>
                                 <p className="leading-relaxed">
-                                    <span className="block font-bold text-gray-700">Asha </span><ReactMarkdown>{response.response}</ReactMarkdown>
+                                    <span className="block font-bold text-gray-700">Udyam Mitra </span><ReactMarkdown>{response.response}</ReactMarkdown>
                                     {response.pdf_url && (
                                         <a
                                             href={response.pdf_url}
@@ -322,12 +322,12 @@ const Home: React.FC = () => {
                         <span className="relative flex shrink-0 overflow-hidden rounded-full w-8 h-8">
                             <Image
                                         src = {pic}
-                                        alt = "Asha"
+                                        alt = "Udyam Mitra"
                                         className={"rounded-full bg-gray-100 border "}
                                     />
                         </span>
                              <p className="leading-relaxed">
-                                 <span className="block font-bold text-gray-700">Asha </span>Welcome! I'm Asha and here to
+                                 <span className="block font-bold text-gray-700">Udyam Mitra </span>Welcome! I'm Udyam Mitra and here to
                                  help
                                  you gather business
                                  advice and a feasibility report for your MSME business in Uttar Pradesh. Let’s get
@@ -342,12 +342,12 @@ const Home: React.FC = () => {
                                 <span className="relative flex shrink-0 overflow-hidden rounded-full w-8 h-8">
                                     <Image
                                         src = {pic}
-                                        alt = "Asha"
+                                        alt = "Udyam Mitra"
                                         className={"rounded-full bg-gray-100 border "}
                                     />
                                 </span>
                                      <p className="leading-relaxed">
-                                         <span className="block font-bold text-gray-700">Asha </span>{item.question}
+                                         <span className="block font-bold text-gray-700">Udyam Mitra </span>{item.question}
                                      </p>
                                  </div>
 
@@ -380,7 +380,7 @@ const Home: React.FC = () => {
                             <span className="relative flex shrink-0 overflow-hidden rounded-full w-8 h-8">
                                 <Image
                                         src = {pic}
-                                        alt = "Asha"
+                                        alt = "Udyam Mitra"
                                         className={"rounded-full bg-gray-100 border "}
                                     />
                                 {/*<div className="rounded-full bg-gray-100 border p-1">*/}
@@ -405,7 +405,7 @@ const Home: React.FC = () => {
                             </span>
                                  <p className="leading-relaxed">
                                      <span
-                                         className="block font-bold text-gray-700">Asha </span>{displayQuestion.question}
+                                         className="block font-bold text-gray-700">Udyam Mitra </span>{displayQuestion.question}
                                  </p>
                              </div>
                          )}
